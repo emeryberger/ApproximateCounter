@@ -18,8 +18,6 @@
 
 #include <atomic>
 #include <thread>
-#include <iostream>
-#include <cmath>
 #include <random>
 
 /* Portable thread-local macro stuff. */
@@ -55,14 +53,17 @@ public:
     reset();
   }
 
+  /// Reset the counter back to zero.
   void reset() {
     _counter = 0;
   }
-  
+
+  /// Get the current value of the counter.
   CounterType operator()() {
     return (((CounterType) 1) << _counter.load()) - 1;
   }
-  
+
+  /// (Approximately) increment the counter.
   approx_counter& operator++() {
     auto currentValue = _counter.load();
     // Increment with probability 2^(-currentValue)
@@ -75,13 +76,16 @@ public:
 
 private:
 
+  /// Thread-local random number generator.
   static uint64_t rng() {
     static thread_local MWC rng;
     return rng.next();
   }
   
   std::atomic<CounterType> _counter;
-  
+
+  /// Random number generator adapted from Marsaglia.
+ 
   class MWC {
   private:
     uint64_t _x, _c, _t;
