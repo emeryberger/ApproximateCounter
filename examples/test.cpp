@@ -1,7 +1,5 @@
 #include "approx_counter.h"
 #include <iostream>
-#include <pthread.h>
-#include <vector>
 
 using namespace std;
 
